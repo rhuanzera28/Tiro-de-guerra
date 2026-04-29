@@ -1,220 +1,298 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Almoxarifado - Tiro de Guerra</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #1e1e1e;
-      color: #fff;
-    }
+<meta charset="UTF-8">
+<title>Almoxarifado TG</title>
 
-    header {
-      background: #2c3e50;
-      padding: 15px;
-      text-align: center;
-      font-size: 20px;
-      font-weight: bold;
-    }
+<style>
+body {
+  margin:0;
+  font-family: Arial;
+  background:#1b1f1b;
+  color:#fff;
+}
 
-    .container {
-      display: flex;
-    }
+header {
+  background:#3b5323;
+  padding:15px;
+  text-align:center;
+  font-size:20px;
+  font-weight:bold;
+}
 
-    .sidebar {
-      width: 220px;
-      background: #34495e;
-      height: 100vh;
-      padding-top: 10px;
-    }
+.container { display:flex; }
 
-    .sidebar button {
-      width: 100%;
-      padding: 12px;
-      border: none;
-      background: none;
-      color: #fff;
-      text-align: left;
-      cursor: pointer;
-    }
+.sidebar {
+  width:220px;
+  background:#2e3d2e;
+  height:100vh;
+}
 
-    .sidebar button:hover {
-      background: #2c3e50;
-    }
+.sidebar button {
+  width:100%;
+  padding:12px;
+  background:none;
+  border:none;
+  color:white;
+  text-align:left;
+  cursor:pointer;
+}
 
-    .content {
-      flex: 1;
-      padding: 20px;
-    }
+.sidebar button:hover {
+  background:#3b5323;
+}
 
-    .card {
-      background: #2c3e50;
-      padding: 15px;
-      margin-bottom: 15px;
-      border-radius: 8px;
-    }
+.content {
+  flex:1;
+  padding:20px;
+}
 
-    input, select {
-      padding: 8px;
-      margin: 5px 0;
-      width: 100%;
-      border-radius: 5px;
-      border: none;
-    }
+.card {
+  background:#2e3d2e;
+  padding:15px;
+  border-radius:8px;
+  margin-bottom:15px;
+}
 
-    button.action {
-      background: #27ae60;
-      border: none;
-      padding: 10px;
-      color: #fff;
-      cursor: pointer;
-      margin-top: 10px;
-      border-radius: 5px;
-    }
+input, select {
+  width:100%;
+  padding:8px;
+  margin:5px 0;
+  border:none;
+  border-radius:5px;
+}
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
+button.action {
+  background:#4caf50;
+  border:none;
+  padding:10px;
+  color:white;
+  cursor:pointer;
+  border-radius:5px;
+}
 
-    th, td {
-      border: 1px solid #555;
-      padding: 8px;
-      text-align: left;
-    }
+table {
+  width:100%;
+  border-collapse:collapse;
+}
 
-    td button {
-      margin-right: 5px;
-      cursor: pointer;
-    }
-  </style>
+th, td {
+  border:1px solid #555;
+  padding:8px;
+}
+
+td button {
+  margin-right:5px;
+}
+</style>
 </head>
+
 <body>
 
 <header>Sistema de Almoxarifado - Tiro de Guerra</header>
 
 <div class="container">
-  <div class="sidebar">
-    <button onclick="showModule('dashboard')">Dashboard</button>
-    <button onclick="showModule('cadastro')">Cadastro</button>
-    <button onclick="showModule('estoque')">Estoque</button>
-  </div>
 
-  <div class="content">
+<div class="sidebar">
+  <button onclick="show('dashboard')">Dashboard</button>
+  <button onclick="show('atiradores')">Atiradores</button>
+  <button onclick="show('estoque')">Estoque</button>
+  <button onclick="show('mov')">Movimentação</button>
+  <button onclick="show('historico')">Histórico</button>
+</div>
 
-    <div id="dashboard" class="module">
-      <div class="card">
-        <h2>Dashboard</h2>
-        <p>Bem-vindo ao sistema.</p>
-      </div>
-    </div>
+<div class="content">
 
-    <div id="cadastro" class="module" style="display:none">
-      <div class="card">
-        <h2>Cadastro de Item</h2>
-        <input type="text" id="itemNome" placeholder="Nome do item">
-        <select id="itemCategoria">
-          <option>Armamento</option>
-          <option>Fardamento</option>
-          <option>Equipamento</option>
-        </select>
-        <button class="action" onclick="addItem()">Cadastrar</button>
-      </div>
-    </div>
-
-    <div id="estoque" class="module" style="display:none">
-      <div class="card">
-        <h2>Controle de Estoque</h2>
-
-        <!-- 👇 TABELA CORRETA JÁ AJUSTADA -->
-        <table>
-          <thead>
-            <tr>
-              <th>Item</th>
-              <th>Categoria</th>
-              <th>Quantidade</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody id="tabelaEstoque"></tbody>
-        </table>
-
-      </div>
-    </div>
-
+<div id="dashboard" class="page">
+  <div class="card">
+    <h2>Bem-vindo</h2>
+    <p>Sistema simples e funcional de controle de almoxarifado.</p>
   </div>
 </div>
 
-<script>
-  let estoque = JSON.parse(localStorage.getItem('estoque')) || [];
+<div id="atiradores" class="page" style="display:none">
+  <div class="card">
+    <h2>Cadastrar Atirador</h2>
+    <input id="nomeAtirador" placeholder="Nome">
+    <input id="numeroAtirador" placeholder="Número">
+    <button class="action" onclick="addAtirador()">Cadastrar</button>
+  </div>
 
-  function salvar() {
-    localStorage.setItem('estoque', JSON.stringify(estoque));
-  }
+  <div class="card">
+    <h2>Lista</h2>
+    <ul id="listaAtiradores"></ul>
+  </div>
+</div>
 
-  function showModule(id) {
-    document.querySelectorAll('.module').forEach(m => m.style.display = 'none');
-    document.getElementById(id).style.display = 'block';
-    renderTabela();
-  }
+<div id="estoque" class="page" style="display:none">
+  <div class="card">
+    <h2>Cadastrar Item</h2>
+    <input id="nomeItem" placeholder="Nome">
+    <select id="tipoItem">
+      <option>Armamento</option>
+      <option>Fardamento</option>
+      <option>Equipamento</option>
+    </select>
+    <input id="qtdItem" type="number" placeholder="Quantidade">
+    <button class="action" onclick="addItem()">Cadastrar</button>
+  </div>
 
-  function addItem() {
-    const nome = document.getElementById('itemNome').value;
-    const categoria = document.getElementById('itemCategoria').value;
-
-    if (!nome) return alert('Digite um nome');
-
-    estoque.push({ nome, categoria, quantidade: 0 });
-    salvar();
-    renderTabela();
-
-    document.getElementById('itemNome').value = '';
-    alert('Item cadastrado!');
-  }
-
-  function alterarQuantidade(index, valor) {
-    if (estoque[index].quantidade + valor < 0) {
-      alert('Quantidade não pode ser negativa');
-      return;
-    }
-
-    estoque[index].quantidade += valor;
-    salvar();
-    renderTabela();
-  }
-
-  function excluirItem(index) {
-    if (!confirm('Deseja excluir este item?')) return;
-
-    estoque.splice(index, 1);
-    salvar();
-    renderTabela();
-  }
-
-  function renderTabela() {
-    const tabela = document.getElementById('tabelaEstoque');
-    tabela.innerHTML = '';
-
-    estoque.forEach((item, index) => {
-      const row = `
+  <div class="card">
+    <h2>Estoque</h2>
+    <table>
+      <thead>
         <tr>
-          <td>${item.nome}</td>
-          <td>${item.categoria}</td>
-          <td>${item.quantidade}</td>
-          <td>
-            <button onclick="alterarQuantidade(${index}, 1)">+</button>
-            <button onclick="alterarQuantidade(${index}, -1)">-</button>
-            <button onclick="excluirItem(${index})">🗑️</button>
-          </td>
+          <th>Item</th>
+          <th>Tipo</th>
+          <th>Qtd</th>
         </tr>
-      `;
-      tabela.innerHTML += row;
-    });
+      </thead>
+      <tbody id="tabelaEstoque"></tbody>
+    </table>
+  </div>
+</div>
+
+<div id="mov" class="page" style="display:none">
+  <div class="card">
+    <h2>Movimentação</h2>
+
+    <select id="selItem"></select>
+    <select id="selAtirador"></select>
+
+    <input id="qtdMov" type="number" placeholder="Quantidade">
+
+    <select id="tipoMov">
+      <option value="saida">Retirada</option>
+      <option value="entrada">Devolução</option>
+    </select>
+
+    <button class="action" onclick="movimentar()">Registrar</button>
+  </div>
+</div>
+
+<div id="historico" class="page" style="display:none">
+  <div class="card">
+    <h2>Histórico</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Atirador</th>
+          <th>Item</th>
+          <th>Qtd</th>
+          <th>Tipo</th>
+          <th>Data</th>
+        </tr>
+      </thead>
+      <tbody id="tabelaHist"></tbody>
+    </table>
+  </div>
+</div>
+
+</div>
+</div>
+
+<script>
+let estoque = JSON.parse(localStorage.getItem('estoque')) || [];
+let atiradores = JSON.parse(localStorage.getItem('atiradores')) || [];
+let historico = JSON.parse(localStorage.getItem('historico')) || [];
+
+function salvar(){
+  localStorage.setItem('estoque', JSON.stringify(estoque));
+  localStorage.setItem('atiradores', JSON.stringify(atiradores));
+  localStorage.setItem('historico', JSON.stringify(historico));
+}
+
+function show(id){
+  document.querySelectorAll('.page').forEach(p=>p.style.display='none');
+  document.getElementById(id).style.display='block';
+  atualizarTudo();
+}
+
+function addAtirador(){
+  let nome = nomeAtirador.value;
+  let numero = numeroAtirador.value;
+  if(!nome || !numero) return alert("Preencha tudo");
+
+  atiradores.push({nome, numero});
+  salvar();
+  nomeAtirador.value='';
+  numeroAtirador.value='';
+  atualizarTudo();
+}
+
+function addItem(){
+  let nome = nomeItem.value;
+  let tipo = tipoItem.value;
+  let qtd = parseInt(qtdItem.value);
+
+  if(!nome || !qtd) return alert("Preencha tudo");
+
+  estoque.push({nome, tipo, qtd});
+  salvar();
+  atualizarTudo();
+}
+
+function movimentar(){
+  let i = selItem.value;
+  let a = selAtirador.value;
+  let qtd = parseInt(qtdMov.value);
+  let tipo = tipoMov.value;
+
+  if(!qtd) return alert("Quantidade inválida");
+
+  if(tipo=="saida"){
+    if(estoque[i].qtd < qtd) return alert("Sem estoque");
+    estoque[i].qtd -= qtd;
+  } else {
+    estoque[i].qtd += qtd;
   }
 
-  renderTabela();
+  historico.push({
+    atirador: atiradores[a].nome,
+    item: estoque[i].nome,
+    qtd,
+    tipo,
+    data: new Date().toLocaleString()
+  });
+
+  salvar();
+  atualizarTudo();
+}
+
+function atualizarTudo(){
+  tabelaEstoque.innerHTML='';
+  estoque.forEach(e=>{
+    tabelaEstoque.innerHTML+=`<tr><td>${e.nome}</td><td>${e.tipo}</td><td>${e.qtd}</td></tr>`;
+  });
+
+  listaAtiradores.innerHTML='';
+  atiradores.forEach(a=>{
+    listaAtiradores.innerHTML+=`<li>${a.nome} (${a.numero})</li>`;
+  });
+
+  selItem.innerHTML='';
+  estoque.forEach((e,i)=>{
+    selItem.innerHTML+=`<option value="${i}">${e.nome}</option>`;
+  });
+
+  selAtirador.innerHTML='';
+  atiradores.forEach((a,i)=>{
+    selAtirador.innerHTML+=`<option value="${i}">${a.nome}</option>`;
+  });
+
+  tabelaHist.innerHTML='';
+  historico.forEach(h=>{
+    tabelaHist.innerHTML+=`<tr>
+      <td>${h.atirador}</td>
+      <td>${h.item}</td>
+      <td>${h.qtd}</td>
+      <td>${h.tipo}</td>
+      <td>${h.data}</td>
+    </tr>`;
+  });
+}
+
+atualizarTudo();
 </script>
 
 </body>
