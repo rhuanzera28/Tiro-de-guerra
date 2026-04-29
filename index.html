@@ -85,6 +85,10 @@
       text-align: left;
     }
 
+    td button {
+      margin-right: 5px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -96,9 +100,6 @@
     <button onclick="showModule('dashboard')">Dashboard</button>
     <button onclick="showModule('cadastro')">Cadastro</button>
     <button onclick="showModule('estoque')">Estoque</button>
-    <button onclick="showModule('armamento')">Armamento</button>
-    <button onclick="showModule('emprestimos')">Empréstimos</button>
-    <button onclick="showModule('relatorios')">Relatórios</button>
   </div>
 
   <div class="content">
@@ -126,33 +127,20 @@
     <div id="estoque" class="module" style="display:none">
       <div class="card">
         <h2>Controle de Estoque</h2>
+
+        <!-- 👇 TABELA CORRETA JÁ AJUSTADA -->
         <table>
           <thead>
-            <tr><th>Item</th><th>Categoria</th></tr>
+            <tr>
+              <th>Item</th>
+              <th>Categoria</th>
+              <th>Quantidade</th>
+              <th>Ações</th>
+            </tr>
           </thead>
           <tbody id="tabelaEstoque"></tbody>
         </table>
-      </div>
-    </div>
 
-    <div id="armamento" class="module" style="display:none">
-      <div class="card">
-        <h2>Controle de Armamento</h2>
-        <p>Registro de armas e controle de cautela.</p>
-      </div>
-    </div>
-
-    <div id="emprestimos" class="module" style="display:none">
-      <div class="card">
-        <h2>Empréstimos</h2>
-        <p>Gerenciar empréstimos e devoluções.</p>
-      </div>
-    </div>
-
-    <div id="relatorios" class="module" style="display:none">
-      <div class="card">
-        <h2>Relatórios</h2>
-        <p>Visualizar dados do sistema.</p>
       </div>
     </div>
 
@@ -160,11 +148,16 @@
 </div>
 
 <script>
-  let estoque = [];
+  let estoque = JSON.parse(localStorage.getItem('estoque')) || [];
+
+  function salvar() {
+    localStorage.setItem('estoque', JSON.stringify(estoque));
+  }
 
   function showModule(id) {
     document.querySelectorAll('.module').forEach(m => m.style.display = 'none');
     document.getElementById(id).style.display = 'block';
+    renderTabela();
   }
 
   function addItem() {
@@ -173,20 +166,55 @@
 
     if (!nome) return alert('Digite um nome');
 
-    estoque.push({ nome, categoria });
+    estoque.push({ nome, categoria, quantidade: 0 });
+    salvar();
     renderTabela();
+
+    document.getElementById('itemNome').value = '';
     alert('Item cadastrado!');
+  }
+
+  function alterarQuantidade(index, valor) {
+    if (estoque[index].quantidade + valor < 0) {
+      alert('Quantidade não pode ser negativa');
+      return;
+    }
+
+    estoque[index].quantidade += valor;
+    salvar();
+    renderTabela();
+  }
+
+  function excluirItem(index) {
+    if (!confirm('Deseja excluir este item?')) return;
+
+    estoque.splice(index, 1);
+    salvar();
+    renderTabela();
   }
 
   function renderTabela() {
     const tabela = document.getElementById('tabelaEstoque');
     tabela.innerHTML = '';
 
-    estoque.forEach(item => {
-      const row = `<tr><td>${item.nome}</td><td>${item.categoria}</td></tr>`;
+    estoque.forEach((item, index) => {
+      const row = `
+        <tr>
+          <td>${item.nome}</td>
+          <td>${item.categoria}</td>
+          <td>${item.quantidade}</td>
+          <td>
+            <button onclick="alterarQuantidade(${index}, 1)">+</button>
+            <button onclick="alterarQuantidade(${index}, -1)">-</button>
+            <button onclick="excluirItem(${index})">🗑️</button>
+          </td>
+        </tr>
+      `;
       tabela.innerHTML += row;
     });
   }
+
+  renderTabela();
 </script>
 
 </body>
